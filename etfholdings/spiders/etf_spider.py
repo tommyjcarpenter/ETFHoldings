@@ -1,6 +1,7 @@
 import scrapy
 from scrapy.selector import HtmlXPathSelector
 from etf import io
+from etfholdings.items import EtfholdingsItem
 
 class ETFSpider(scrapy.Spider):
     """
@@ -16,6 +17,8 @@ class ETFSpider(scrapy.Spider):
     def parse(self, response):
         items = []
 
+        fund = response.url.split("/")[-2]
+
         #<table data-toggle="table" data-classes="striped" data-striped="true" data-pagination="true" data-page-size="10" data-mobile-responsive="true" class="table-condensed table table-striped news" id="etfs-that-own">
         T = response.xpath('//table[@data-toggle="table" and @data-classes="striped" and @data-striped="true" and @data-pagination="true" and @data-page-size="10" and @data-mobile-responsive="true" and @class="table-condensed table table-striped news"  and @id="etfs-that-own"]//tbody//tr')
 
@@ -23,10 +26,16 @@ class ETFSpider(scrapy.Spider):
             rows = r.xpath('td')
             symbol = rows[0].xpath('a/text()').extract()[0]
             long_name = rows[1].xpath('a/text()').extract()[0]
-            percent_allocation = rows[2].xpath('text()').extract()[0]
-            items.append((symbol, long_name, percent_allocation))
+            percentage_allocation = rows[2].xpath('text()').extract()[0]
 
-        print(response)
-        print(items)
+            item = EtfholdingsItem()
+            item['fund'] = fund
+            item['symbol'] = symbol
+            item['long_name'] = long_name
+            item['percentage_allocation'] = percentage_allocation
+
+            items.append(item)
+
+        return items
 
 

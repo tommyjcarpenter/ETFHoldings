@@ -7,8 +7,9 @@
 
 import scrapy
 
-
 class EtfholdingsItem(scrapy.Item):
     # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+    fund = scrapy.Field()
+    symbol = scrapy.Field()
+    long_name = scrapy.Field()
+    percentage_allocation = scrapy.Field()
