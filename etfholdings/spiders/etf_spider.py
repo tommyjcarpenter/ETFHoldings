@@ -1,6 +1,6 @@
 import scrapy
 from scrapy.selector import HtmlXPathSelector
-from etfholdings import io
+from etf import io
 
 class ETFSpider(scrapy.Spider):
     """
